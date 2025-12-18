@@ -21,6 +21,7 @@ const initialForm = {
   vendor_minimum_order_qty: "",
   vendor_end_qty: "",
   vendor_product_price: "",
+  item_cost: "",
   product_brand: "",
   vendor_sizechart_link: "",
   product_html_specifications: "",
@@ -204,12 +205,16 @@ export default function Home() {
                 <Input size="sm" type="text" name="vendor_minimum_order_qty" value={form.vendor_minimum_order_qty} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
-                <Field.Label>End Quantity</Field.Label>
+                <Field.Label>End QTY</Field.Label>
                 <Input size="sm" type="text" name="vendor_end_qty" value={form.vendor_end_qty} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
-                <Field.Label>Vendor Product Price</Field.Label>
+                <Field.Label>Product Price</Field.Label>
                 <Input size="sm" type="text" name="vendor_product_price" value={form.vendor_product_price} onChange={handleChange} />
+              </Field.Root>
+              <Field.Root>
+                <Field.Label>Item Cost</Field.Label>
+                <Input size="sm" type="text" name="item_cost" value={form.item_cost} onChange={handleChange} />
               </Field.Root>
             </HStack>
             <HStack gap={4}>
