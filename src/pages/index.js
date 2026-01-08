@@ -1,10 +1,10 @@
 import { ColorModeButton } from "@/components/ui/color-mode";
-import { Container, Stack, Field, Flex, Card, Input, Button, SimpleGrid, Text, HStack, Separator, Table, Heading, Textarea, Box } from "@chakra-ui/react";
+import { Container, Stack, Field, Flex, Card, Input, Button, SimpleGrid, Text, HStack, Separator, Table, Heading, Textarea, Box, IconButton } from "@chakra-ui/react";
 import Head from "next/head";
 import { useState, useRef, useEffect } from "react";
 import { LuPlus } from "react-icons/lu";
 import { PiFileCsvLight } from "react-icons/pi";
-import { TbTableExport } from "react-icons/tb";
+import { TbCopy, TbEdit, TbPlus, TbTableExport, TbTrash } from "react-icons/tb";
 
 const initialForm = {
   vendor_link: "",
@@ -32,6 +32,7 @@ const initialForm = {
 
 export default function Home() {
   const [form, setForm] = useState(initialForm);
+  const [isEditing, setIsEditing] = useState(false)
   const [products, setProducts] = useState([])
   const debounceTimer = useRef(null);
 
@@ -94,15 +95,6 @@ export default function Home() {
       return;
     }
 
-    const isDuplicate = products.some(
-      (p) => p.vendor_link.trim().toLowerCase() === form.vendor_link.trim().toLowerCase()
-    );
-
-    if (isDuplicate) {
-      alert("Vendor link already exists. Please use a unique one.");
-      return;
-    }
-
     setProducts([...products, form]);
     setForm(initialForm);
   };
@@ -130,6 +122,23 @@ export default function Home() {
     window.URL.revokeObjectURL(url);
   }
 
+  const handleDelete = (vendor_link) => {
+    setProducts(prev => prev.filter(p => p.vendor_link !== vendor_link))
+  }
+
+  const handleEdit = (product) => {
+    setIsEditing(true);
+    setForm(product);
+  };
+
+  const handleDuplicate = (product) => {
+    setIsEditing(false);
+    setForm({
+      ...product,
+      vendor_link: `${product.vendor_link}-copy`,
+    });
+  };
+
   return (
     <>
       <Head>
@@ -138,147 +147,173 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Stack px={0} h="100vh" overflow="hidden" gap={0}>
-        <Flex h="6dvh" p={4} alignItems="center" justifyContent="space-between">
+      <Stack gap={0}>
+        <Flex p={2} flexShrink={0} bg="bg" height="6vh" alignItems="center" justifyContent="space-between" position="sticky" top={0} zIndex={5}>
           <Heading>Product Data Enrichment Processor</Heading>
           <ColorModeButton />
         </Flex>
-        <Flex flex={1} p={4} bg="bg.muted">
-          <Stack gap={2} w="30%" bg="bg" p={4}>
+        <Flex height="88vh" p={0} direction={{ base: "column", lg: "row" }}>
+          <Stack gap={2} w={{ base: "100%", lg: "30%" }} bg="bg" p={4} overflow="auto">
             <HStack gap={4}>
               <Field.Root>
                 <Field.Label>Vendor Link</Field.Label>
-                <Input size="sm" type="text" name="vendor_link" value={form.vendor_link} onChange={handleChange} />
+                <Input size="xs" type="text" name="vendor_link" value={form.vendor_link} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
                 <Field.Label>Vendor Name</Field.Label>
-                <Input size="sm" type="text" name="vendor_name" value={form.vendor_name} onChange={handleChange} />
+                <Input size="xs" type="text" name="vendor_name" value={form.vendor_name} onChange={handleChange} />
               </Field.Root>
             </HStack>
             <HStack gap={4}>
               <Field.Root>
                 <Field.Label>Product Name</Field.Label>
-                <Input size="sm" type="text" name="product_name" value={form.product_name} onChange={handleChange} />
+                <Input size="xs" type="text" name="product_name" value={form.product_name} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
                 <Field.Label>Product SKU</Field.Label>
-                <Input size="sm" type="text" name="product_sku" value={form.product_sku} onChange={handleChange} />
+                <Input size="xs" type="text" name="product_sku" value={form.product_sku} onChange={handleChange} />
               </Field.Root>
             </HStack>
             <HStack gap={4}>
               <Field.Root>
                 <Field.Label>Product Color</Field.Label>
-                <Input size="sm" type="text" name="product_color" value={form.product_color} onChange={handleChange} />
+                <Input size="xs" type="text" name="product_color" value={form.product_color} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
                 <Field.Label>Product Sizes Offered</Field.Label>
-                <Input size="sm" type="text" name="product_sizes_offered" value={form.product_sizes_offered} onChange={handleChange} />
+                <Input size="xs" type="text" name="product_sizes_offered" value={form.product_sizes_offered} onChange={handleChange} />
               </Field.Root>
             </HStack>
             <HStack gap={4}>
               <Field.Root>
                 <Field.Label>Product Family</Field.Label>
-                <Input size="sm" type="text" name="product_family" value={form.product_family} onChange={handleChange} />
+                <Input size="xs" type="text" name="product_family" value={form.product_family} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
                 <Field.Label>In-House Vendor Decorated</Field.Label>
-                <Input size="sm" type="text" name="inhouse_vendor_decorated" value={form.inhouse_vendor_decorated} onChange={handleChange} />
+                <Input size="xs" type="text" name="inhouse_vendor_decorated" value={form.inhouse_vendor_decorated} onChange={handleChange} />
               </Field.Root>
             </HStack>
-            <HStack gap={4}>
+            <SimpleGrid columns={{ base: 2, lg: 3 }} gap={4}>
               <Field.Root>
                 <Field.Label>Decoration Method</Field.Label>
-                <Input size="sm" type="text" name="standard_decoration_method" value={form.standard_decoration_method} onChange={handleChange} />
+                <Input size="xs" type="text" name="standard_decoration_method" value={form.standard_decoration_method} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
                 <Field.Label>Decoration Placement</Field.Label>
-                <Input size="sm" type="text" name="standard_decoration_placement" value={form.standard_decoration_placement} onChange={handleChange} />
+                <Input size="xs" type="text" name="standard_decoration_placement" value={form.standard_decoration_placement} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
                 <Field.Label># of Imprint Colors</Field.Label>
-                <Input size="sm" type="text" name="standard_number_imprint_colors" value={form.standard_number_imprint_colors} onChange={handleChange} />
+                <Input size="xs" type="text" name="standard_number_imprint_colors" value={form.standard_number_imprint_colors} onChange={handleChange} />
               </Field.Root>
-            </HStack>
-            <HStack gap={4}>
+            </SimpleGrid>
+            <SimpleGrid columns={{ base: 2, lg: 4 }} gap={4}>
               <Field.Root>
                 <Field.Label>Min Order QTY</Field.Label>
-                <Input size="sm" type="text" name="vendor_minimum_order_qty" value={form.vendor_minimum_order_qty} onChange={handleChange} />
+                <Input size="xs" type="text" name="vendor_minimum_order_qty" value={form.vendor_minimum_order_qty} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
                 <Field.Label>End QTY</Field.Label>
-                <Input size="sm" type="text" name="vendor_end_qty" value={form.vendor_end_qty} onChange={handleChange} />
+                <Input size="xs" type="text" name="vendor_end_qty" value={form.vendor_end_qty} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
                 <Field.Label>Product Price</Field.Label>
-                <Input size="sm" type="text" name="vendor_product_price" value={form.vendor_product_price} onChange={handleChange} />
+                <Input size="xs" type="text" name="vendor_product_price" value={form.vendor_product_price} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
                 <Field.Label>Item Cost</Field.Label>
-                <Input size="sm" type="text" name="item_cost" value={form.item_cost} onChange={handleChange} />
+                <Input size="xs" type="text" name="item_cost" value={form.item_cost} onChange={handleChange} />
               </Field.Root>
-            </HStack>
+            </SimpleGrid>
             <HStack gap={4}>
               <Field.Root>
                 <Field.Label>Product Brand</Field.Label>
-                <Input size="sm" type="text" name="product_brand" value={form.product_brand} onChange={handleChange} />
+                <Input size="xs" type="text" name="product_brand" value={form.product_brand} onChange={handleChange} />
               </Field.Root>
               <Field.Root>
                 <Field.Label>Vendor Size Chart Link</Field.Label>
-                <Input size="sm" type="text" name="vendor_sizechart_link" value={form.vendor_sizechart_link} onChange={handleChange} />
+                <Input size="xs" type="text" name="vendor_sizechart_link" value={form.vendor_sizechart_link} onChange={handleChange} />
               </Field.Root>
             </HStack>
             <Field.Root>
               <Field.Label>Available Images</Field.Label>
-              <Input size="sm" type="text" name="available_images" value={form.available_images} onChange={handleChange} />
+              <Input size="xs" type="text" name="available_images" value={form.available_images} onChange={handleChange} />
             </Field.Root>
             <Field.Root>
               <Field.Label>Product HTML Specifications</Field.Label>
               <Textarea size="sm" name="product_html_specifications" value={form.product_html_specifications} onChange={handleChange} />
-              <Text>Preview</Text>
-              <Text lineClamp={2}>{stripAttributes(form.product_html_specifications)}</Text>
+              {/* <Text>Preview</Text>
+              <Text lineClamp={2}>{stripAttributes(form.product_html_specifications)}</Text> */}
             </Field.Root>
-            <Button rounded="full" mt="auto" onClick={handleSubmit}>Submit (or Shift + Space)</Button>
           </Stack>
+
           <Box
             flex={1}
-            overflow="auto"
           >
-            <Table.Root size="sm" striped interactive>
-              <Table.Header>
-                <Table.Row>
-                  <Table.ColumnHeader>Vendor Link</Table.ColumnHeader>
-                  <Table.ColumnHeader>Vendor Name</Table.ColumnHeader>
-                  <Table.ColumnHeader>Product Name</Table.ColumnHeader>
-                  <Table.ColumnHeader>SKU</Table.ColumnHeader>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {products.length === 0 ? (
+            <Table.ScrollArea
+              minW="100%"
+            >
+              <Table.Root size="sm" interactive>
+                <Table.Header>
                   <Table.Row>
-                    <Table.Cell colSpan={3}>No products. Add</Table.Cell>
+                    <Table.ColumnHeader>Vendor Link</Table.ColumnHeader>
+                    <Table.ColumnHeader>Vendor Name</Table.ColumnHeader>
+                    <Table.ColumnHeader>Product Name</Table.ColumnHeader>
+                    <Table.ColumnHeader>SKU</Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="end">Action</Table.ColumnHeader>
                   </Table.Row>
-                ) :
-                  products.map((product) => (
-                    <Table.Row key={product.vendor_link}>
-                      <Table.Cell><Text truncate maxW="240px">{product.vendor_link}</Text></Table.Cell>
-                      <Table.Cell><Text truncate maxW="120px">{product.vendor_name}</Text></Table.Cell>
-                      <Table.Cell><Text truncate maxW="400px">{product.product_name}</Text></Table.Cell>
-                      <Table.Cell><Text truncate maxW="400px">{product.product_sku}</Text></Table.Cell>
+                </Table.Header>
+                <Table.Body>
+                  {products.length === 0 ? (
+                    <Table.Row>
+                      <Table.Cell colSpan={5}>No products. Add</Table.Cell>
                     </Table.Row>
-                  ))
-                }
-              </Table.Body>
-            </Table.Root>
+                  ) :
+                    products.map((product) => (
+                      <Table.Row key={product.vendor_link}>
+                        <Table.Cell><Text truncate maxW="240px">{product.vendor_link}</Text></Table.Cell>
+                        <Table.Cell><Text truncate maxW="120px">{product.vendor_name}</Text></Table.Cell>
+                        <Table.Cell><Text truncate maxW="400px">{product.product_name}</Text></Table.Cell>
+                        <Table.Cell><Text truncate maxW="400px">{product.product_sku}</Text></Table.Cell>
+                        <Table.Cell>
+                          <Flex gap={2} justifyContent="end">
+                            <IconButton onClick={() => handleEdit(product)} size="xs" variant="outline">
+                              <TbEdit />
+                            </IconButton>
+                            <IconButton onClick={() => handleDelete(product.vendor_link)} size="xs" variant="outline">
+                              <TbTrash />
+                            </IconButton>
+                            <IconButton onClick={() => handleDuplicate(product)} size="xs" variant="outline">
+                              <TbCopy />
+                            </IconButton>
+                          </Flex>
+                        </Table.Cell>
+                      </Table.Row>
+                    ))
+                  }
+                </Table.Body>
+              </Table.Root>
+            </Table.ScrollArea>
+
           </Box>
         </Flex >
         <Flex
+          height="6vh"
+          flexShrink={0}
           borderTop="1px solid"
           borderColor="bg.muted"
           bg="bg"
-          p={4}
+          p={2}
+          gap={4}
           justifyContent="flex-end"
+          position="fixed"
+          bottom={0}
+          left={0}
+          right={0}
         >
-          <Button onClick={handleExport} disabled={products.length === 0}>Create CSV <TbTableExport /></Button>
+          <Button onClick={handleExport} disabled={products.length === 0}>Export CSV <TbTableExport /></Button>
+          <Button onClick={handleSubmit}>{isEditing ? 'Update Product' : 'Add Product'} {isEditing ? <TbEdit /> : <TbPlus />}</Button>
         </Flex>
       </Stack>
     </>
