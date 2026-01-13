@@ -28,30 +28,23 @@ const initialForm = {
   available_images: "",
 }
 
-
-
 export default function Home() {
   const [form, setForm] = useState(initialForm);
   const [isEditing, setIsEditing] = useState(false)
   const [products, setProducts] = useState([])
   const debounceTimer = useRef(null);
+  const [editIndex, setEditIndex] = useState(null);
 
   const stripAttributes = (html) => {
     if (!html) return "";
 
     let cleaned = html
-
       .replace(/<(script|style|link|meta|iframe|object|embed|noscript)[\s\S]*?<\/\1>/gi, "")
       .replace(/<(script|style|link|meta|iframe|object|embed|noscript)[^>]*>/gi, "")
-
       .replace(/<(\w+)([^>]*)>/g, "<$1>")
-
       .replace(/>\s+</g, "><")
-
       .replace(/[\u200E\u200F\u202A-\u202E]/g, "")
-
       .replace(/&quot;/g, "");
-
     return cleaned.trim();
   };
 
@@ -84,7 +77,7 @@ export default function Home() {
   // }, []);
 
   const handleSubmit = (e) => {
-    if (e) e.preventDefault(); // only prevent if event exists
+    if (e) e.preventDefault();
 
     if (
       !form.vendor_link.trim() ||
@@ -95,7 +88,20 @@ export default function Home() {
       return;
     }
 
-    setProducts([...products, form]);
+    if (isEditing) {
+      // UPDATE PRODUCT
+      const updatedProducts = products.map((item, index) =>
+        index === editIndex ? form : item
+      );
+
+      setProducts(updatedProducts);
+      setEditIndex(null);
+    } else {
+      // ADD PRODUCT
+      setProducts([...products, form]);
+    }
+
+    setIsEditing(false);
     setForm(initialForm);
   };
 
@@ -126,8 +132,9 @@ export default function Home() {
     setProducts(prev => prev.filter(p => p.vendor_link !== vendor_link))
   }
 
-  const handleEdit = (product) => {
+  const handleEdit = (product, index) => {
     setIsEditing(true);
+    setEditIndex(index);
     setForm(product);
   };
 
@@ -245,8 +252,8 @@ export default function Home() {
             <Field.Root>
               <Field.Label>Product HTML Specifications</Field.Label>
               <Textarea size="sm" name="product_html_specifications" value={form.product_html_specifications} onChange={handleChange} />
-              {/* <Text>Preview</Text>
-              <Text lineClamp={2}>{stripAttributes(form.product_html_specifications)}</Text> */}
+              <Text>Preview</Text>
+              <Text>{stripAttributes(form.product_html_specifications)}</Text>
             </Field.Root>
           </Stack>
 
@@ -272,7 +279,7 @@ export default function Home() {
                       <Table.Cell colSpan={5}>No products. Add</Table.Cell>
                     </Table.Row>
                   ) :
-                    products.map((product) => (
+                    products.map((product, index) => (
                       <Table.Row key={product.vendor_link}>
                         <Table.Cell><Text truncate maxW="240px">{product.vendor_link}</Text></Table.Cell>
                         <Table.Cell><Text truncate maxW="120px">{product.vendor_name}</Text></Table.Cell>
@@ -280,7 +287,7 @@ export default function Home() {
                         <Table.Cell><Text truncate maxW="400px">{product.product_sku}</Text></Table.Cell>
                         <Table.Cell>
                           <Flex gap={2} justifyContent="end">
-                            <IconButton onClick={() => handleEdit(product)} size="xs" variant="outline">
+                            <IconButton onClick={() => handleEdit(product, index)} size="xs" variant="outline">
                               <TbEdit />
                             </IconButton>
                             <IconButton onClick={() => handleDelete(product.vendor_link)} size="xs" variant="outline">
@@ -315,7 +322,10 @@ export default function Home() {
           right={0}
         >
           <Button onClick={handleExport} disabled={products.length === 0}>Export CSV <TbTableExport /></Button>
-          <Button onClick={handleSubmit}>{isEditing ? 'Update Product' : 'Add Product'} {isEditing ? <TbEdit /> : <TbPlus />}</Button>
+          <Button onClick={handleSubmit}>
+            {isEditing ? 'Update Product' : 'Add Product'}
+            {isEditing ? <TbEdit /> : <TbPlus />}
+          </Button>
         </Flex>
       </Stack>
     </>
