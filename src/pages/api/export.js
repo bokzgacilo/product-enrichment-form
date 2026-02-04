@@ -5,10 +5,16 @@ export default function handler(req, res) {
 
   const csv = Papa.unparse(data);
 
-  const title = 'export_' + Date.now();
+  const title = "export_" + Date.now();
 
-  res.setHeader("Content-Type", "text/csv");
-  res.setHeader("Content-Disposition", "attachment; filename=" + title + ".csv");
+  const BOM = "\uFEFF";
+  const csvWithBOM = BOM + csv;
 
-  return res.status(200).send(csv);
+  res.setHeader("Content-Type", "text/csv; charset=utf-8");
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="${title}.csv"`
+  );
+
+  return res.status(200).send(csvWithBOM);
 }
