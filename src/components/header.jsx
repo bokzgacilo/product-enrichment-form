@@ -23,6 +23,12 @@ export default function Header() {
 			>
 				<NextLink href="/corewip">Core WIP</NextLink>
 			</ChakraLink>
+			<ChakraLink
+				asChild
+				textDecoration={pathname === "/logoprocessor" ? "underline" : "none"}
+			>
+				<NextLink href="/logoprocessor">Logo Processor</NextLink>
+			</ChakraLink>
 		</Flex>
 	)
 }
