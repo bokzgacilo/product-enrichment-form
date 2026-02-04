@@ -9,7 +9,6 @@ import {
 	Text,
 	HStack,
 	Table,
-	Heading,
 	Box,
 	IconButton,
 	NativeSelect
@@ -26,7 +25,8 @@ const initialForm = {
 	product_color: "",
 	product_sizes_offered: "",
 	taxcode: "PC040156",
-	ihvendor: "IH",
+	attribute_set: "",
+	ihvendor: "",
 	product_family: "",
 	decoration: "",
 	moq: "",
@@ -191,6 +191,21 @@ export default function CoreWip() {
 
 						<SimpleGrid columns={{ base: 2, lg: 3 }} gap={4}>
 							<Field.Root>
+								<Field.Label>Attribute Set</Field.Label>
+								<NativeSelect.Root size="xs">
+									<NativeSelect.Field
+										name="attribute_set"
+										value={form.attribute_set}
+										onChange={handleChange}
+									>
+										<option value="">None</option>
+										<option value="Color">Color</option>
+										<option value="Color_and_Size">Color_and_Size</option>
+										<option value="Color_and_Size_and_Lenght">Color_and_Size_and_Lenght</option>
+									</NativeSelect.Field>
+								</NativeSelect.Root>
+							</Field.Root>
+							<Field.Root>
 								<Field.Label>IH/Vendor</Field.Label>
 								<NativeSelect.Root size="xs">
 									<NativeSelect.Field
@@ -198,6 +213,7 @@ export default function CoreWip() {
 										value={form.ihvendor}
 										onChange={handleChange}
 									>
+										<option value="">None</option>
 										<option value="IH">In-house</option>
 										<option value="Vendor">Vendor</option>
 									</NativeSelect.Field>
