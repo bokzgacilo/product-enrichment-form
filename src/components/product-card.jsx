@@ -97,24 +97,30 @@ export default function ProductCard({ index, handleChange, data }) {
             />
           )}
           {!error && (
-            <Image
-              objectFit="cover"
-              transition="transform 0.3s ease"
-              key={retryKey}
-              src={data.ImageURL}
-              alt={data.ReferenceCode}
-              onLoad={() => {
-                setTimeout(() => setLoaded(true), 1000);
-              }}
-              onError={() => {
-                setError(true);
-              }}
-              h={{ base: "280px", md: "320px", lg: "auto" }}
-              width="100%"
-              display={loaded ? "block" : "none"}
-              rounded="xl"
+            <Box
               order={{ base: 1, lg: 2 }}
-            />
+              cursor="pointer"
+              onClick={() => window.open(data.ImageURL, '_blank', 'noopener,noreferrer')}
+              display={loaded ? "block" : "none"}
+            >
+              <Image
+                objectFit="cover"
+                transition="transform 0.3s ease"
+                key={retryKey}
+                src={data.ImageURL}
+                alt={data.ReferenceCode}
+                onLoad={() => {
+                  setTimeout(() => setLoaded(true), 1000);
+                }}
+                onError={() => {
+                  setError(true);
+                }}
+                h={{ base: "280px", md: "320px", lg: "auto" }}
+                width="100%"
+                rounded="xl"
+                referrerPolicy="no-referrer"
+              />
+            </Box>
           )}
           {error && (
             <Stack
