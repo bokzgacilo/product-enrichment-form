@@ -1,34 +1,33 @@
 "use client";
 
-import { Flex } from "@chakra-ui/react";
-import { Link as ChakraLink } from "@chakra-ui/react"
-import NextLink from "next/link"
-import { usePathname } from "next/navigation";
+import { Tabs } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 export default function Header() {
-	const pathname = usePathname();
-
-	return (
-		<Flex p={2} flexShrink={0} bg="bg" height="6vh" alignItems="center" position="sticky" top={0} zIndex={5} gap={4}>
-			<ChakraLink
-				asChild
-				textDecoration={pathname === "/" ? "underline" : "none"}
-			>
-				<NextLink href="/">Data Enrichment</NextLink>
-			</ChakraLink>
-
-			<ChakraLink
-				asChild
-				textDecoration={pathname === "/corewip" ? "underline" : "none"}
-			>
-				<NextLink href="/corewip">Core WIP</NextLink>
-			</ChakraLink>
-			<ChakraLink
-				asChild
-				textDecoration={pathname === "/logoprocessor" ? "underline" : "none"}
-			>
-				<NextLink href="/logoprocessor">Logo Processor</NextLink>
-			</ChakraLink>
-		</Flex>
-	)
+  const router = useRouter();
+  return (
+    <Tabs.Root
+      size="lg"
+      value={router.pathname}
+      onValueChange={(e) => {
+        console.log(e.value)
+        router.push(e.value)
+      }}
+    >
+      <Tabs.List>
+        <Tabs.Trigger value="/data-enrichment">
+          Enrichment
+        </Tabs.Trigger>
+        <Tabs.Trigger value="/corewip">
+          WIP
+        </Tabs.Trigger>
+        <Tabs.Trigger value="/logoprocessor">
+          Logo
+        </Tabs.Trigger>
+        <Tabs.Trigger value="/category">
+          Category
+        </Tabs.Trigger>
+      </Tabs.List>
+    </Tabs.Root>
+  )
 }

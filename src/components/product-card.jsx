@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { PiImageBroken } from "react-icons/pi";
-import { TbGlobe, TbLink } from "react-icons/tb";
+import { TbLink } from "react-icons/tb";
 
 export default function ProductCard({ index, handleChange, data }) {
   const [loaded, setLoaded] = useState(false);
