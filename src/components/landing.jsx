@@ -41,9 +41,9 @@ export default function Landing() {
 
         const headers = results.meta.fields || [];
 
-        const missingHeaders = requiredHeaders.filter(
-          (h) => !headers.includes(h),
-        );
+        const missingHeaders = requiredHeaders
+          .filter(h => h !== "PDP Link")
+          .filter(h => !headers.includes(h));
 
         if (missingHeaders.length > 0) {
           toaster.create({
