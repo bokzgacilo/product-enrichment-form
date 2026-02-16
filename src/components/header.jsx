@@ -1,12 +1,16 @@
 "use client";
 
-import { Tabs } from "@chakra-ui/react";
+import { Button, Tabs } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
 export default function Header() {
   const router = useRouter();
   return (
     <Tabs.Root
+      position="sticky"
+      top={0}
+      bg="bg"
+      zIndex={20000}
       size="lg"
       value={router.pathname}
       onValueChange={(e) => {
