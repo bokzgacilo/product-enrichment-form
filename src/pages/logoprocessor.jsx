@@ -14,11 +14,9 @@ export default function Layout() {
       <Head>
         <title>Logo Processor</title>
       </Head>
-      <Container maxW="full" p={0}>
-        <Stack>
-          {data.length === 0 ? <Landing /> : <MainGrid />}
-        </Stack>
-      </Container>
+      <Stack>
+        {data.length === 0 ? <Landing /> : <MainGrid />}
+      </Stack>
     </>
   );
 }

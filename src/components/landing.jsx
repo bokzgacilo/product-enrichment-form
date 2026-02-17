@@ -85,16 +85,16 @@ export default function Landing() {
   };
 
   return (
-    <Stack height="92dvh" gap={4} p={4} w={{ base: "100%", lg: "500px" }} alignSelf="center">
+    <Stack p={4} w={{ base: "100%", lg: "750px" }} alignSelf="center">
       <Toaster />
-      <Heading mt={12} size={{ base: "md", lg: "2xl" }}>
+      <Heading size="xl">
         Step 1: Prepare CSV
       </Heading>
-      <Button size="xl" rounded="full" as={Link} href="/Template.csv" download>
-        Download CSV Template
+      <Button as={Link} href="/mockup_list_template.csv" variant="outline" download>
         <LuDownload />
+        mockup_list_template.csv
       </Button>
-      <Heading mt={6} size={{ base: "md", lg: "2xl" }}>
+      <Heading mt={4} size="xl">
         Step 2: Upload Data
       </Heading>
       <Box>
@@ -118,7 +118,7 @@ export default function Landing() {
                   or click below to browse files
                 </Text>
                 <FileUpload.Trigger asChild>
-                  <Button my={4} rounded="full" size="xl" loading={loading} loadingText="Loading...">
+                  <Button my={4} loading={loading} loadingText="Loading...">
                     Browse File <LuUpload />
                   </Button>
                 </FileUpload.Trigger>

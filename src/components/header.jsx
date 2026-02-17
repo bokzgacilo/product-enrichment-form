@@ -12,7 +12,7 @@ export default function Header() {
       bg="bg"
       zIndex={20000}
       size="lg"
-      value={router.pathname}
+      value={router.pathname === "/" ? "/product-directory" : router.pathname}
       onValueChange={(e) => {
         console.log(e.value)
         router.push(e.value)
@@ -30,6 +30,9 @@ export default function Header() {
         </Tabs.Trigger>
         <Tabs.Trigger value="/category">
           Category
+        </Tabs.Trigger>
+        <Tabs.Trigger value="/product-directory">
+          Product Directory
         </Tabs.Trigger>
       </Tabs.List>
     </Tabs.Root>

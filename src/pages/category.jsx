@@ -80,10 +80,12 @@ export default function Category() {
       <Head>
         <title>Category</title>
       </Head>
-      <Stack px={4}>
+      <Stack
+        alignSelf="center"
+      >
         {
           data.length === 0 ?
-            <Stack maxWidth="500px">
+            <Stack w="750px" p={4}>
               <Heading>Step 1. Download Template</Heading>
               <Button variant="outline" rounded="md" as={Link} href="/category_template.csv" download><LuDownload /> category_template.csv</Button>
               <Text>Populate the template with your list of pr  oducts that needs to be categorized.</Text>
@@ -100,14 +102,24 @@ export default function Category() {
                     <LuUpload />
                   </Icon>
                   <FileUpload.DropzoneContent>
-                    <Box>Drag and drop files here</Box>
-                    <Box color="fg.muted">.csv up to 25MB</Box>
+                    <Stack gap={0}>
+                      <Text fontSize="16px">Drag and drop files here</Text>
+                      <Text mt={2} fontSize="16px">
+                        or click below to browse files
+                      </Text>
+                      <FileUpload.Trigger asChild>
+                        <Button my={4} loading={loading} loadingText="Loading...">
+                          Browse File <LuUpload />
+                        </Button>
+                      </FileUpload.Trigger>
+                      <Text fontSize="12px">.csv only up to 5MB</Text>
+                    </Stack>
                   </FileUpload.DropzoneContent>
                 </FileUpload.Dropzone>
               </FileUpload.Root>
             </Stack>
             :
-            <SimpleGrid columns={6} gap={4}>
+            <SimpleGrid columns={6} gap={4} px={4}>
               {data.map((category, index) => (
                 <CategoryCard key={index} index={index} data={category} />
               ))}
