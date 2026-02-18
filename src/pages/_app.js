@@ -4,6 +4,7 @@ import Header from "../components/header";
 import { DataProvider } from "@/context/DataContext";
 import { CategoryDataProvider } from "@/context/CategoryDataContext";
 import { ColorModeButton } from "@/components/ui/color-mode";
+import { Analytics } from '@vercel/analytics/next';
 
 export default function App({ Component, pageProps }) {
   return (
@@ -13,6 +14,7 @@ export default function App({ Component, pageProps }) {
           <CategoryDataProvider>
             <Header />
             <Component {...pageProps} />
+            <Analytics />
           </CategoryDataProvider>
         </DataProvider>
       </Stack>
