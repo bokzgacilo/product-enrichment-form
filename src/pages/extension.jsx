@@ -37,7 +37,6 @@ export default function Extension() {
         <Image src="/extension_installation/step-3.png" alt="Brand Junkie Logo" />
         <Text>Step 4: Verify if installed properly, make sure the extension is enabled/active</Text>
         <Image src="/extension_installation/step-4.png" alt="Brand Junkie Logo" />
-
         <Heading size="2xl" mt={4}>How To Use</Heading>
         <video controls>
           <source src="/how-to-use.mov" type="video/mp4" />
