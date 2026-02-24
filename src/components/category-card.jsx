@@ -22,7 +22,9 @@ const CATEGORIES = createListCollection({
         "Wovens",
         "T-Shirts",
         "Workwear",
-        "Jacket"
+        "Jacket",
+        "Pants",
+        "Long Sleeve Polo"
       ]
     },
     {
@@ -35,7 +37,9 @@ const CATEGORIES = createListCollection({
         "T-Shirts",
         "Workwear",
         "Blouses & Cardigans",
-        "Jacket"
+        "Jacket",
+        "Pants",
+        "Long Sleeve Polo"
       ]
     },
     {
