@@ -22,7 +22,7 @@ const CATEGORIES = createListCollection({
         "Wovens",
         "T-Shirts",
         "Workwear",
-        "Blouses & Cardigans"
+        "Jacket"
       ]
     },
     {
@@ -34,7 +34,8 @@ const CATEGORIES = createListCollection({
         "Wovens",
         "T-Shirts",
         "Workwear",
-        "Blouses & Cardigans"
+        "Blouses & Cardigans",
+        "Jacket"
       ]
     },
     {
@@ -106,6 +107,7 @@ const CATEGORIES = createListCollection({
         "Sun Protection",
         "Camping & Hiking",
         "Outdoor Living",
+        "Cooler",
         "Cookware",
         "Blankets",
         "Health & Wellness",
@@ -179,69 +181,6 @@ export default function CategoryCard({ index, data }) {
     handleChange(index, "category", matchedCategory?.label);
     handleChange(index, "product_family", matchedFamily?.label);
   }, [initValue])
-
-  // useEffect(() => {
-  //   const matchedCategory = CATEGORIES.items.find(
-  //     (item) => item.value === category?.[0]
-  //   );
-
-  //   handleChange(index, "category", matchedCategory?.label);
-  // }, [category])
-  // useEffect(() => {
-  //   const matchedCategory = CATEGORIES.items.find(
-  //     (item) => item.value === category?.[0]
-  //   );
-  //   setFAMILIES(createListCollection({ items: matchedCategory?.families ?? [] }));
-  // }, [category])
-  // useEffect(() => {
-  //   handleChange(index, "category", category?.[0]);
-  //   handleChange(index, "product_family", family?.[0]);
-  // }, [category, family])
-
-  // useEffect(() => {
-  //   const categoryValue = category?.[0];
-  //   const familyValue = family?.[0];
-
-  //   const category = CATEGORIES.items.find(
-  //     (item) => item.value === categoryValue
-  //   );
-
-  //   if (!category) {
-  //     setFAMILIES(createListCollection({ items: [] }));
-  //     setFamily([]);
-  //     return;
-  //   }
-
-  //   console.log(categoryValue, familyValue)
-
-  //   const families = category.families ?? [];
-
-  //   setFAMILIES(
-  //     createListCollection({
-  //       items: families.map((item) => ({
-  //         value: item,
-  //         label: item
-  //       }))
-  //     })
-  //   );
-
-  //   const matchedFamily = FAMILIES.items.find(
-  //     (item) => item.value === data.product_family
-  //   );
-  //   setFamily(
-  //     matchedFamily ? [matchedFamily.value] : []
-  //   );
-  //   handleChange(index, "category", categoryValue);
-  //   handleChange(index, "product_family", familyValue);
-  // }, [category]);
-
-  // useEffect(() => {
-  //   console.log(family[0])
-  // }, [family])
-
-  // useEffect(() => {
-  //   if (!family?.length) return;
-  // }, []);
 
   return (
     <Card.Root variant="elevated" size="sm">
