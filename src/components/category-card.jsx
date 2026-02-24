@@ -24,7 +24,8 @@ const CATEGORIES = createListCollection({
         "Workwear",
         "Jacket",
         "Pants",
-        "Long Sleeve Polo"
+        "Long Sleeve Polo",
+        "Babywear"
       ]
     },
     {
@@ -39,7 +40,8 @@ const CATEGORIES = createListCollection({
         "Blouses & Cardigans",
         "Jacket",
         "Pants",
-        "Long Sleeve Polo"
+        "Long Sleeve Polo",
+        "Babywear"
       ]
     },
     {
