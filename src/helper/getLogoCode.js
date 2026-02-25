@@ -1,14 +1,16 @@
 export const LOGO_CODE_MAP = {
-  "CHVC": "CHVC",
-  "CHV": "CHV",
-  "DELO-HORZ": "DELO-HORZ",
-  "ORO-HORZ": "ORO-HORZ",
-  "TEX-HORZ": "TEX-HORZ",
-  "DELO": "DELO",
-  "TEX": "TEX",
-  "CHVC-HORZ": "CHVC-HORZ",
-  "HAV-HORZ": "HAV-HORZ",
-  "HAV": "HAV",
+  "Boost Mobile": "BM",
+  "GenMobile": "GM",
+  "Chevron - The Human Energy Company": "CHVC",
+  "Chevron Logo": "CHV",
+  "Delo Logo + Label Vertical": "DELO-HORZ",
+  "Oronite Logo + Label Vertical": "ORO-HORZ",
+  "Texaco Logo + Label Vertical": "TEX-HORZ",
+  "Delo Logo + Label Horizontal": "DELO",
+  "Texaco Logo + Label Horizontal": "TEX",
+  "Chevron Logo + Label": "CHVC-HORZ",
+  "Havoline Horizontal": "HAV-HORZ",
+  "Havoline Vertical": "HAV",
   "CHV-RETIREE": "CHV-RETIREE"
 };
 
@@ -21,4 +23,4 @@ export function getLogoCode(code) {
   return code
     ? LOGO_CODE_LOOKUP[code.trim().toLowerCase()] || null
     : null;
-}
+} 
