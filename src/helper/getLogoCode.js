@@ -8,7 +8,7 @@ export const LOGO_CODE_MAP = {
   "Texaco Logo + Label Vertical": "TEX-HORZ",
   "Delo Logo + Label Horizontal": "DELO",
   "Texaco Logo + Label Horizontal": "TEX",
-  "Chevron Logo + Label": "CHVC-HORZ",
+  "Chevron Logo + Label Horizontal": "CHVC-HORZ",
   "Havoline Horizontal": "HAV-HORZ",
   "Havoline Vertical": "HAV",
   "CHV-RETIREE": "CHV-RETIREE"
