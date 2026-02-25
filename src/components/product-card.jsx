@@ -1,5 +1,9 @@
 "use client";
 
+import { COLOR_CODE_MAP } from "@/helper/getColorCode";
+import { DECO_METHODS } from "@/helper/getDecoMethodCode";
+import { LOGO_CODE_MAP } from "@/helper/getLogoCode";
+import { PLACEMENT_MAP } from "@/helper/getPlacementCode";
 import {
   Box,
   Button,
@@ -10,6 +14,7 @@ import {
   Icon,
   Image,
   Input,
+  NativeSelect,
   SimpleGrid,
   Skeleton,
   Stack,
@@ -30,11 +35,12 @@ export default function ProductCard({ index, handleChange, data }) {
     setLoaded(false);
     setRetryKey((prev) => prev + 1);
   };
+
   return (
     <Card.Root variant="elevated" size="sm">
       <Card.Header px={4} pb={0}>
         <Flex alignItems="center" justifyContent="space-between">
-          <Card.Title fontSize="10px">{data.ReferenceCode}</Card.Title>
+          <Card.Title fontSize="10px">{data.SKU}</Card.Title>
           <Checkbox.Root
             size="sm"
             onCheckedChange={(e) =>
@@ -50,36 +56,74 @@ export default function ProductCard({ index, handleChange, data }) {
       <Card.Body pt={4} px={4} pb={4}>
         <SimpleGrid templateColumns={{ base: "1fr", lg: "40% 1fr" }} gap={4}>
           <Stack gap={4} order={{ base: 2, lg: 1 }}>
-            <Input
-              size="sm"
-              placeholder="Logo Name"
-              value={data.logoName}
-              disabled={noLogo || error}
-              onChange={(e) => handleChange(index, "logoName", e.target.value)}
-            />
-            <Input
-              size="sm"
-              placeholder="Logo Color"
-              value={data.logoColor}
-              disabled={noLogo || error}
-              onChange={(e) => handleChange(index, "logoColor", e.target.value)}
-            />
-            <Input
-              size="sm"
-              placeholder="Placement"
-              value={data.placement}
-              disabled={noLogo || error}
-              onChange={(e) => handleChange(index, "placement", e.target.value)}
-            />
-            <Input
-              size="sm"
-              placeholder="Deco Method"
-              value={data.decoMethod}
-              disabled={noLogo || error}
-              onChange={(e) =>
-                handleChange(index, "decoMethod", e.target.value)
-              }
-            />
+            <NativeSelect.Root size='sm'>
+              <NativeSelect.Field
+                value={data.logoName}
+                onChange={(e) => handleChange(index, "logoName", e.currentTarget.value)}
+                disabled={noLogo || error}
+              >
+                <option value="">Select Logo Name</option>
+                {
+                  Object.keys(LOGO_CODE_MAP).map((logo) => (
+                    <option key={logo} value={logo}>
+                      {logo}
+                    </option>
+                  ))
+                }
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+            <NativeSelect.Root size='sm'>
+              <NativeSelect.Field
+                value={data.logoColor}
+                onChange={(e) => handleChange(index, "logoColor", e.currentTarget.value)}
+                disabled={noLogo || error}
+              >
+                <option value="">Select Logo Color</option>
+                {
+                  Object.keys(COLOR_CODE_MAP).map((color) => (
+                    <option key={color} value={color}>
+                      {color}
+                    </option>
+                  ))
+                }
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+            <NativeSelect.Root size='sm'>
+              <NativeSelect.Field
+                value={data.placement}
+                onChange={(e) => handleChange(index, "placement", e.currentTarget.value)}
+                disabled={noLogo || error}
+              >
+                <option value="">Select Placement</option>
+                {
+                  Object.keys(PLACEMENT_MAP).map((placement) => (
+                    <option key={placement} value={placement}>
+                      {placement}
+                    </option>
+                  ))
+                }
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+            <NativeSelect.Root size='sm'>
+              <NativeSelect.Field
+                value={data.decoMethod}
+                onChange={(e) => handleChange(index, "decoMethod", e.currentTarget.value)}
+                disabled={noLogo || error}
+              >
+                <option value="">Select Deco Method</option>
+                {
+                  Object.keys(DECO_METHODS).map((method) => (
+                    <option key={method} value={method}>
+                      {method}
+                    </option>
+                  ))
+                }
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
 
             {data.pdpLink &&
               <Button variant="subtle" size="xs" asChild>

@@ -24,7 +24,7 @@ function buildImageFilename(row) {
   const placement_code = getPlacementCode(row.placement);
 
   const parts = [
-    row.ReferenceCode,
+    row.SKU,
     logo_code,
     color_code,
     placement_code,
@@ -49,6 +49,7 @@ export default async function handler(req, res) {
     const filename = buildImageFilename(row);
 
     return {
+      "SKU": row.SKU,
       "Reference Code": row.ReferenceCode,
       "Image URL": row.ImageURL,
       "Image Filename": filename,

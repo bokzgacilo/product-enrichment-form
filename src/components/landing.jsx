@@ -61,6 +61,7 @@ export default function Landing() {
         );
 
         const enriched = filtered.map((row) => ({
+          SKU: row["SKU"] || "",
           ReferenceCode: row["Reference Code"] || "",
           ImageURL: row["Image URL"] || "",
           logoName: row["Logo Name"] || "",
