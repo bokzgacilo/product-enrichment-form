@@ -9,7 +9,7 @@ import { Analytics } from '@vercel/analytics/next';
 export default function App({ Component, pageProps }) {
   return (
     <Provider>
-      <Stack>
+      <Stack gap={0}>
         <DataProvider>
           <CategoryDataProvider>
             <Header />

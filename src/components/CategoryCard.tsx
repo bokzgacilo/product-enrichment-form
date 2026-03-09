@@ -1,7 +1,7 @@
 "use client";
 
+import { CategoryList } from "@/constants/Category";
 import { useCategoryData } from "@/context/CategoryDataContext";
-import { useData } from "@/context/DataContext";
 import {
   Card,
   createListCollection,
@@ -13,135 +13,7 @@ import { useEffect, useState } from "react";
 
 const CATEGORIES = createListCollection({
   items: [
-    {
-      "value": "mens_aprel",
-      "label": "Men's Apparel",
-      "families": [
-        "Polos",
-        "Outerwear",
-        "Wovens",
-        "T-Shirts",
-        "Workwear",
-        "Jacket",
-        "Pants",
-        "Long Sleeve Polo",
-        "Babywear"
-      ]
-    },
-    {
-      "value": "womens_apparel",
-      "label": "Women's Apparel",
-      "families": [
-        "Polos",
-        "Outerwear",
-        "Wovens",
-        "T-Shirts",
-        "Workwear",
-        "Blouses & Cardigans",
-        "Jacket",
-        "Pants",
-        "Long Sleeve Polo",
-        "Babywear"
-      ]
-    },
-    {
-      "value": "headwear",
-      "label": "Headwear",
-      "families": [
-        "Structured",
-        "Unstructured",
-        "Knit"
-      ]
-    },
-    {
-      "value": "drinkware",
-      "label": "Drinkware",
-      "families": [
-        "Tumblers",
-        "Mugs",
-        "Bottles",
-        "Cups",
-        "Drinkware Accessories"
-      ]
-    },
-    {
-      "value": "bags",
-      "label": "Bags",
-      "families": [
-        "Backpacks",
-        "Slings",
-        "Duffels",
-        "Suitcases",
-        "Totes",
-        "Laptop/Messenger",
-        "Travel Accessories",
-        "Coolers"
-      ]
-    },
-    {
-      "value": "office",
-      "label": "Office",
-      "families": [
-        "Desk Accessories",
-        "Journals & Notebooks",
-        "Padfolios",
-        "Writing",
-        "Lanyards & Badgeholders",
-        "Calendars"
-      ]
-    },
-    {
-      "value": "tech",
-      "label": "Tech",
-      "families": [
-        "Headphones & Earbuds",
-        "Speakers",
-        "Tech Accessories",
-        "Cables & Adapters",
-        "Charging"
-      ]
-    },
-    {
-      "value": "sports_outdoors",
-      "label": "Sports & Outdoors",
-      "families": [
-        "Games",
-        "Golf",
-        "Hunting & Fishing",
-        "Flashlights & Lanterns",
-        "Knives & Tools",
-        "Sun Protection",
-        "Camping & Hiking",
-        "Outdoor Living",
-        "Cooler",
-        "Cookware",
-        "Blankets",
-        "Health & Wellness",
-        "Fitness"
-      ]
-    },
-    {
-      "value": "events",
-      "label": "Events",
-      "families": [
-        "Table Covers",
-        "Flags",
-        "Displays",
-        "Tents",
-        "Inflatables",
-        "Tradeshows",
-        "Banners"
-      ]
-    },
-    {
-      "value": "giveaways",
-      "label": "Giveaways",
-      "families": [
-        "Event Essentials",
-        "Personal Care & Wellness",
-        "Lifestyle & Novelty"
-      ]
-    }
+    ...CategoryList
   ]
 })
 
