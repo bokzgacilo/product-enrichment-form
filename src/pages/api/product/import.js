@@ -1,4 +1,4 @@
-import { supabase } from "@/config/supabase";
+import { supabase } from "@/config/Supabase";
 import formidable from "formidable";
 import fs from "fs";
 import Papa from "papaparse";

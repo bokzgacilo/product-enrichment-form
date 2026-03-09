@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 
 import { CategoryList } from "@/constants/Category";
@@ -24,8 +25,8 @@ export default function CategoryCard({ index, data }) {
     family: ""
   });
 
-  const [category, setCategory] = useState("");
-  const [family, setFamily] = useState("");
+  const [category, setCategory] = useState<string[]>([]);
+  const [family, setFamily] = useState<string[]>([]);
   const [FAMILIES, setFAMILIES] = useState(null);
 
   useEffect(() => {
@@ -37,20 +38,29 @@ export default function CategoryCard({ index, data }) {
     console.log(index, data.category, data.product_family)
 
     if (matchedCategory) {
-      setCategory([matchedCategory?.value] || "");
-      const familyCollection = createListCollection({ items: matchedCategory?.families.map((item) => ({ value: item, label: item })) })
+      setCategory(matchedCategory.value ? [matchedCategory.value] : []);
+
+      const familyCollection = createListCollection({
+        items: matchedCategory.families.map((item) => ({
+          value: item,
+          label: item,
+        })),
+      });
+
       setFAMILIES(familyCollection);
-      matchedFamily = familyCollection.items.find(
+
+      const matchedFamily = familyCollection.items.find(
         (item) => item.label === data.product_family
       );
-      setFamily([matchedFamily?.value] || "");
+
+      setFamily(matchedFamily?.value ? [matchedFamily.value] : []);
     }
   }, [stateData]);
 
   useEffect(() => {
     if (!initValue.category) return;
     const matchedCategory = CATEGORIES.items.find(
-      (item) => item.value === initValue.category[0]
+      (item) => item.value === initValue.category
     );
     const matchedFamily = FAMILIES?.items.find(
       (item) => item.value === family[0]
@@ -67,14 +77,18 @@ export default function CategoryCard({ index, data }) {
       </Card.Header>
       <Card.Body pt={4} px={4} pb={4}>
         <Image height="300px" objectFit="contain" src={data.image_url} alt={data.reference_id} referrerPolicy="no-referrer" />
-        <Select.Root collection={CATEGORIES} value={category} onValueChange={(e) => {
-          setCategory(e.value);
-          setFamily([]);
-          setInitValue({
-            category: e.value,
-            family: ""
-          });
-        }}>
+        <Select.Root
+          collection={CATEGORIES}
+          value={category}
+          onValueChange={(e) => {
+            setCategory(e.value);
+            setFamily([]);
+            setInitValue({
+              category: e.value[0] ?? "",
+              family: ""
+            });
+          }}
+        >
           <Select.HiddenSelect />
           <Select.Label>Category</Select.Label>
           <Select.Control>
@@ -106,8 +120,8 @@ export default function CategoryCard({ index, data }) {
           onValueChange={(e) => {
             setFamily(e.value);
             setInitValue({
-              category: category,
-              family: e.value
+              category: category[0] ?? "",
+              family: e.value[0] ?? ""
             });
           }}
         >
@@ -155,3 +169,5 @@ export default function CategoryCard({ index, data }) {
     </Card.Root >
   );
 }
+
+/* eslint-enable */

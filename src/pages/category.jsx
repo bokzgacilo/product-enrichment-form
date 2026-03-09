@@ -6,7 +6,7 @@ import { LuDownload, LuRefreshCcw, LuSave, LuUpload } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import Papa from "papaparse";
 import { Toaster, toaster } from "@/components/ui/toaster";
-import CategoryCard from "@/components/category-card";
+import CategoryCard from "@/components/CategoryCard";
 import { useCategoryData } from "@/context/CategoryDataContext";
 import { saveAs } from "file-saver";
 

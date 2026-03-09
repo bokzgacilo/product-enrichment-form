@@ -1,5 +1,5 @@
 import { toaster, Toaster } from "@/components/ui/toaster"
-import { supabase } from "@/config/supabase"
+import { supabase } from "@/config/Supabase"
 import { Button, ButtonGroup, Card, createListCollection, Field, Flex, Group, Heading, Icon, IconButton, Input, Pagination, Portal, Select, SimpleGrid, Spinner, Stack, Table, Text } from "@chakra-ui/react"
 import Head from "next/head"
 import { useEffect, useState } from "react"
