@@ -35,12 +35,28 @@ export async function getServerSideProps() {
   }
 }
 
-
-
 const List: FC = ({ products, count }: { products: Product[], count: number }) => {
   const [CoreProducts, setCoreProducts] = useState<Product[]>(products);
   const [page, setPage] = useState<number>(1);
   const [searchWord, setSearchWord] = useState<string>("");
+
+  const fetchProducts = async (pageNumber: number) => {
+    const from = (pageNumber - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+
+    const { data, error } = await supabase
+      .from("products")
+      .select("sku,name,url,vendor,brand")
+      .range(from, to);
+
+    if (!error && data) {
+      setCoreProducts(data);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts(page);
+  }, [page]);
 
   const handleSearch = async () => {
     const { data } = await supabase
