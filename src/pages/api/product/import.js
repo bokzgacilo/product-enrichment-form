@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     const file = files.file[0];
     if (!file) {
       return res.status(400).json({ error: "CSV file required" });
-    }
+    } x
 
     console.log(file)
 

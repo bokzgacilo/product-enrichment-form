@@ -51,6 +51,17 @@ const List: FC = ({ products, count }: { products: Product[], count: number }) =
     setCoreProducts(data || []);
   }
 
+  const handleRemove = async (sku: string) => {
+    const { error } = await supabase
+      .from("products")
+      .delete()
+      .eq("sku", sku)
+
+    if (!error) {
+      setCoreProducts((prev) => prev.filter((p) => p.sku !== sku))
+    }
+  }
+
   return (
     <>
       <Head>
@@ -100,10 +111,10 @@ const List: FC = ({ products, count }: { products: Product[], count: number }) =
                   <Table.Cell colSpan={6}>{product.brand}</Table.Cell>
                   <Table.Cell textAlign="end">
                     <ButtonGroup>
-                      <Button variant="outline" size="xs" asChild>
+                      {/* <Button variant="outline" size="xs" asChild>
                         <Link href={`/corewip/edit/${product.sku}`}><LuPen /> Edit</Link>
-                      </Button>
-                      <Button variant="solid" size="xs" colorPalette="red"><LuTrash />Remove</Button>
+                      </Button> */}
+                      <Button variant="solid" size="xs" colorPalette="red" onClick={() => handleRemove(product.sku)}><LuTrash />Remove</Button>
                     </ButtonGroup>
                   </Table.Cell>
                 </Table.Row>
