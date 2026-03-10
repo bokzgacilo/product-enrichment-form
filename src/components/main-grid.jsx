@@ -5,7 +5,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { saveAs } from "file-saver";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { LuRefreshCcw, LuSave } from "react-icons/lu";
 import { useData } from "@/context/DataContext";
 import ProductCard from "./product-card";
@@ -14,11 +14,13 @@ export default function MainGrid() {
   const { data, setData } = useData();
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (index, field, value) => {
-    const updated = [...data];
-    updated[index][field] = value;
-    setData(updated);
-  };
+  const handleChange = useCallback((index, field, value) => {
+    setData(prev => {
+      const newData = [...prev];
+      newData[index] = { ...newData[index], [field]: value };
+      return newData;
+    });
+  }, [])
 
   async function updateCsv() {
     setLoading(true);
@@ -38,12 +40,12 @@ export default function MainGrid() {
       <SimpleGrid
         columns={{ base: 1, md: 2, lg: 3 }}
         gap={4}
+        overflow="auto"
         p={4}
-        hidden={data.length === 0}
       >
         {data.map((row, index) => (
           <ProductCard
-            key={`${row.referenceCode}-GRD-${index}`}
+            key={`${row.referenceCode}-${index}`}
             index={index}
             handleChange={handleChange}
             data={row}

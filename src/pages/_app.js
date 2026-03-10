@@ -1,15 +1,17 @@
 import { Provider } from "@/components/ui/provider";
-import { Flex, Stack } from "@chakra-ui/react";
-import Header from "../components/header";
+import { Stack } from "@chakra-ui/react";
 import { DataProvider } from "@/context/DataContext";
 import { CategoryDataProvider } from "@/context/CategoryDataContext";
-import { ColorModeButton } from "@/components/ui/color-mode";
 import { Analytics } from '@vercel/analytics/next';
+import Header from "@/components/Header";
 
 export default function App({ Component, pageProps }) {
   return (
     <Provider>
-      <Stack gap={0}>
+      <Stack
+        height="100vh"
+        gap={0}
+      >
         <DataProvider>
           <CategoryDataProvider>
             <Header />

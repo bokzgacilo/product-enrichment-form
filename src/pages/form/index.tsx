@@ -9,6 +9,10 @@ import { LuListPlus, LuRefreshCcw } from "react-icons/lu";
 
 const REQUIRED_FIELDS = ["name", "vendor", "url", "sku"];
 
+function cleanString(str) {
+  return str.replace(/[^\x20-\x7E]/g, "")
+}
+
 const CoreWip: FC = () => {
   const [values, setValues] = useState(() => Object.fromEntries(CoreWipInputs.map((input) => [input.name, input.defaultValue ?? ""])))
   const [selectedFamily, setSelectedFamily] = useState("Men's Apparel")
@@ -16,8 +20,8 @@ const CoreWip: FC = () => {
   function handleChange(name, val) {
     setValues((prev) => ({
       ...prev,
-      [name]: val,
-    }));
+      [name]: cleanString(val),
+    }))
   }
 
   const handleStoreProduct = async () => {
@@ -37,7 +41,6 @@ const CoreWip: FC = () => {
     const sku = values.sku.trim();
 
     try {
-      // 🔎 Check if SKU already exists
       const { data: existingSku, error: skuError } = await supabase
         .from("products")
         .select("sku")

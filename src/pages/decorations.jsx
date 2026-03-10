@@ -14,7 +14,10 @@ export default function Layout() {
       <Head>
         <title>Logo Processor</title>
       </Head>
-      <Stack>
+      <Stack
+        height="100vh"
+        overflow="none"
+      >
         {data.length === 0 ? <Landing /> : <MainGrid />}
       </Stack>
     </>

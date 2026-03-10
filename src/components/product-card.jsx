@@ -13,18 +13,26 @@ import {
   Flex,
   Icon,
   Image,
-  Input,
   NativeSelect,
   SimpleGrid,
   Skeleton,
   Stack,
   Text,
 } from "@chakra-ui/react";
+import React from "react";
 import { useState } from "react";
+import { LuX } from "react-icons/lu";
 import { PiImageBroken } from "react-icons/pi";
 import { TbLink } from "react-icons/tb";
 
-export default function ProductCard({ index, handleChange, data }) {
+const selects = [
+  { field: "logoName", label: "Select Logo Name", map: LOGO_CODE_MAP },
+  { field: "logoColor", label: "Select Logo Color", map: COLOR_CODE_MAP },
+  { field: "placement", label: "Select Placement", map: PLACEMENT_MAP },
+  { field: "decoMethod", label: "Select Deco Method", map: DECO_METHODS },
+];
+
+const ProductCard = React.memo(function ProductCard({ index, handleChange, data }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
@@ -37,93 +45,54 @@ export default function ProductCard({ index, handleChange, data }) {
   };
 
   return (
-    <Card.Root variant="elevated" size="sm">
-      <Card.Header px={4} pb={0}>
-        <Flex alignItems="center" justifyContent="space-between">
-          <Card.Title fontSize="10px">{data.SKU}</Card.Title>
-          <Checkbox.Root
+    <Card.Root variant="outline">
+      <Card.Header>
+        <Flex alignItems="center" gap={4}>
+          <Card.Title mr="auto">#{index + 1} - {data.SKU}</Card.Title>
+          <CheckboxCard.Root
+            cursor="pointer"
             size="sm"
+            variant="surface"
+            colorPalette="orange"
             onCheckedChange={(e) =>
               handleChange(index, "noLogo", !!e.checked)
             }
+            maxW="150px"
           >
-            <Checkbox.HiddenInput />
-            <Checkbox.Control />
-            <Checkbox.Label>No Logo</Checkbox.Label>
-          </Checkbox.Root>
+            <CheckboxCard.HiddenInput />
+            <CheckboxCard.Control
+              py={1.5}
+              alignItems="center"
+            >
+              <CheckboxCard.Label fontSize="sm">No Logo?</CheckboxCard.Label>
+              <CheckboxCard.Indicator />
+            </CheckboxCard.Control>
+          </CheckboxCard.Root>
+          {/* <Button variant="outline" colorPalette="red" size="xs"><LuX />Remove</Button> */}
         </Flex>
       </Card.Header>
-      <Card.Body pt={4} px={4} pb={4}>
+      <Card.Body pb={0}>
         <SimpleGrid templateColumns={{ base: "1fr", lg: "40% 1fr" }} gap={4}>
           <Stack gap={4} order={{ base: 2, lg: 1 }}>
-            <NativeSelect.Root size='sm'>
-              <NativeSelect.Field
-                value={data.logoName}
-                onChange={(e) => handleChange(index, "logoName", e.currentTarget.value)}
-                disabled={noLogo || error}
-              >
-                <option value="">Select Logo Name</option>
-                {
-                  Object.keys(LOGO_CODE_MAP).map((logo) => (
-                    <option key={logo} value={logo}>
-                      {logo}
+            {selects.map(({ field, label, map }) => (
+              <NativeSelect.Root size="sm" key={field}>
+                <NativeSelect.Field
+                  value={data[field] ?? ""}
+                  onChange={(e) =>
+                    handleChange(index, field, e.currentTarget.value)
+                  }
+                  disabled={noLogo || error}
+                >
+                  <option value="">{label}</option>
+                  {Object.keys(map).map((item) => (
+                    <option key={item} value={item}>
+                      {item}
                     </option>
-                  ))
-                }
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
-            <NativeSelect.Root size='sm'>
-              <NativeSelect.Field
-                value={data.logoColor}
-                onChange={(e) => handleChange(index, "logoColor", e.currentTarget.value)}
-                disabled={noLogo || error}
-              >
-                <option value="">Select Logo Color</option>
-                {
-                  Object.keys(COLOR_CODE_MAP).map((color) => (
-                    <option key={color} value={color}>
-                      {color}
-                    </option>
-                  ))
-                }
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
-            <NativeSelect.Root size='sm'>
-              <NativeSelect.Field
-                value={data.placement}
-                onChange={(e) => handleChange(index, "placement", e.currentTarget.value)}
-                disabled={noLogo || error}
-              >
-                <option value="">Select Placement</option>
-                {
-                  Object.keys(PLACEMENT_MAP).map((placement) => (
-                    <option key={placement} value={placement}>
-                      {placement}
-                    </option>
-                  ))
-                }
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
-            <NativeSelect.Root size='sm'>
-              <NativeSelect.Field
-                value={data.decoMethod}
-                onChange={(e) => handleChange(index, "decoMethod", e.currentTarget.value)}
-                disabled={noLogo || error}
-              >
-                <option value="">Select Deco Method</option>
-                {
-                  Object.keys(DECO_METHODS).map((method) => (
-                    <option key={method} value={method}>
-                      {method}
-                    </option>
-                  ))
-                }
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
+                  ))}
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
+            ))}
 
             {data.pdpLink &&
               <Button variant="subtle" size="xs" asChild>
@@ -146,8 +115,12 @@ export default function ProductCard({ index, handleChange, data }) {
               cursor="pointer"
               onClick={() => window.open(data.ImageURL, '_blank', 'noopener,noreferrer')}
               display={loaded ? "block" : "none"}
+            // border="1px solid"
+            // borderColor="border"
             >
               <Image
+                border="1px solid"
+                borderColor="gray.200"
                 objectFit="cover"
                 transition="transform 0.3s ease"
                 key={retryKey}
@@ -161,7 +134,6 @@ export default function ProductCard({ index, handleChange, data }) {
                 }}
                 h={{ base: "280px", md: "320px", lg: "auto" }}
                 width="100%"
-                rounded="xl"
                 referrerPolicy="no-referrer"
               />
             </Box>
@@ -201,4 +173,6 @@ export default function ProductCard({ index, handleChange, data }) {
       <Card.Footer></Card.Footer>
     </Card.Root >
   );
-}
+})
+
+export default ProductCard;

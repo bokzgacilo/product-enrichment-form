@@ -60,6 +60,7 @@ const List: FC = ({ products, count }: { products: Product[], count: number }) =
   };
 
   useEffect(() => {
+    if (page === 1) return;
     fetchProducts(page);
   }, [page]);
 
@@ -70,7 +71,9 @@ const List: FC = ({ products, count }: { products: Product[], count: number }) =
     const { data } = await supabase
       .from("products")
       .select("sku,name,url,vendor,brand")
-      .ilike("name", `%${searchWord}%`)
+      .or(
+        `name.ilike.%${searchWord}%,sku.ilike.%${searchWord}%,brand.ilike.%${searchWord}%,vendor.ilike.%${searchWord}%,url.ilike.%${searchWord}%`
+      )
       .range(from, to);
 
     setCoreProducts(data || []);
@@ -115,7 +118,7 @@ const List: FC = ({ products, count }: { products: Product[], count: number }) =
         <Flex gap={2} maxW="500px" px={4}>
           <Input size="xs" type="search" onChange={(e) => setSearchWord(e.target.value)} value={searchWord} placeholder="Search" />
           <Button size="xs" onClick={handleSearch}>Search <LuSearch /></Button>
-          <Button size="xs">Export Parent <TbTableExport /></Button>
+          <Button size="xs" asChild><Link href="/products/builder">Export Parent <TbTableExport /></Link></Button>
         </Flex>
         <Box px={4} position="relative">
           {
@@ -155,16 +158,16 @@ const List: FC = ({ products, count }: { products: Product[], count: number }) =
               </Table.Header>
               <Table.Body>
                 {CoreProducts.map((product) => (
-                  <Table.Row key={product.sku} cursor="pointer">
-                    <Table.Cell colSpan={6}>{product.sku}</Table.Cell>
+                  <Table.Row
+                    key={product.sku}
+                    cursor="pointer"
+                  >
+                    <Table.Cell colSpan={6}><Link href={`/products/${product.sku}`}>{product.sku}</Link></Table.Cell>
                     <Table.Cell colSpan={6}>{product.name}</Table.Cell>
                     <Table.Cell colSpan={6}>{product.vendor}</Table.Cell>
                     <Table.Cell colSpan={6}>{product.brand}</Table.Cell>
                     <Table.Cell textAlign="center">
                       <ButtonGroup>
-                        {/* <Button variant="outline" size="xs" asChild>
-                        <Link href={`/corewip/edit/${product.sku}`}><LuPen /> Edit</Link>
-                      </Button> */}
                         <Button variant="ghost" size="xs" colorPalette="red" onClick={() => handleRemove(product.sku)}><LuTrash /></Button>
                       </ButtonGroup>
                     </Table.Cell>

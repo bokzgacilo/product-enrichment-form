@@ -12,7 +12,7 @@ export const CoreWipInputs: InputField[] = [
   { name: "sku", label: "SKU", defaultValue: "" },
   { name: "price", label: "Price", defaultValue: "" },
   { name: "size", label: "Size", defaultValue: "" },
-  { name: "color", label: "Color", defaultValue: "" },
+  { name: "colors", label: "Color", defaultValue: "" },
   { name: "category", label: "Category", defaultValue: "Men's Apparel" },
   { name: "family", label: "Family", defaultValue: "Polos" },
   { name: "moq", label: "MOQ", defaultValue: "" },
