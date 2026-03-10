@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  basePath: "/brand-junkie",
+  assetPrefix: "/brand-junkie",
+
   async redirects() {
     return [
       {
