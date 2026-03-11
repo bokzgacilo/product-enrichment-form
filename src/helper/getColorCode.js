@@ -1,7 +1,8 @@
 export const COLOR_CODE_MAP = {
   "White": "WHT",
-  "Full Color Blue": "FCB",
+  "Full Color Blue": "FCBLUE",
   "Full Color White": "FCW",
+  "Full Color Black": "FCB",
   "Black": "BLK",
   "Red": "RED",
   "Deboss": "DEB",

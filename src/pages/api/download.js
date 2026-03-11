@@ -76,6 +76,7 @@ export default async function handler(req, res) {
 
     try {
       const imageResponse = await fetch(url);
+      console.log("downloading:", row.ImageURL)
 
       if (!imageResponse.ok) {
         console.warn("Failed to fetch", url);
