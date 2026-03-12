@@ -61,6 +61,7 @@ export const PLACEMENT_MAP = {
   "Promo Wrap": "PW",
   "Rear Hat": "RH",
   "Right Chest": "RC",
+  "Right Chest/Right Sleeve": "RC&RS",
   "Right Vertical Sleeve Print": "RVS",
   "Right Wearer Hip": "RWH",
   "Right Wearer's Leg Near Hem": "RWLH",

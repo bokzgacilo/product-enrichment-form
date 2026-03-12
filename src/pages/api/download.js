@@ -29,6 +29,7 @@ function buildImageFilename(row) {
     color_code,
     placement_code,
     deco_method_code,
+    row.productColorFamily
   ];
 
   const filtered = parts.filter(p => p && p !== "");
@@ -59,6 +60,7 @@ export default async function handler(req, res) {
       "Deco Method": row.decoMethod,
       "No Logo": row.noLogo,
       "PDP Link": row.pdpLink,
+      "Product Color Family": row.productColorFamily
     };
   });
 

@@ -30,14 +30,14 @@ export async function middleware(req: NextRequest) {
 
   const pathname = req.nextUrl.pathname
 
-  const isLoginPage = pathname.startsWith("/login")
-  const isPublicFile = pathname.startsWith("/_next") || pathname.includes(".")
+  // const isLoginPage = pathname.startsWith("/login")
+  // const isPublicFile = pathname.startsWith("/_next") || pathname.includes(".")
 
-  if (!session && !isLoginPage && !isPublicFile) {
-    const redirectUrl = req.nextUrl.clone()
-    redirectUrl.pathname = "/login"
-    return NextResponse.redirect(redirectUrl)
-  }
+  // if (!session && !isLoginPage && !isPublicFile) {
+  //   const redirectUrl = req.nextUrl.clone()
+  //   redirectUrl.pathname = "/login"
+  //   return NextResponse.redirect(redirectUrl)
+  // }
 
   return response
 }

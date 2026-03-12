@@ -18,7 +18,7 @@
 // USE FOR TAMKO
 export const LOGO_CODE_MAP = {
   "Building Products": "TAM-BP",
-  "Building Products LLC": "TAM-BP",
+  "Tamko Building Products LLC": "TAM-BP",
   "Building Products LLC / Pro Line": "TAM-BP/PROLINE",
   "Building Products LLC / Tamko Edge": "TAM-BP/EDGE",
   "Building Products LLC / Titan XT": "TAM-BP/TXT",

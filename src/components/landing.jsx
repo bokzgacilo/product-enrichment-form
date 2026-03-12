@@ -36,7 +36,7 @@ export default function Landing() {
           "Placement",
           "Deco Method",
           "No Logo",
-          "PDP Link"
+          "PDP Link",
         ];
 
         const headers = results.meta.fields || [];
@@ -70,6 +70,7 @@ export default function Landing() {
           decoMethod: row["Deco Method"] || "",
           noLogo: row["No Logo"] === "true" || row["No Logo"] === true || false,
           pdpLink: row["PDP Link"] || "",
+          productColorFamily: row["Product Color Family"] || "",
         }));
 
         toaster.create({

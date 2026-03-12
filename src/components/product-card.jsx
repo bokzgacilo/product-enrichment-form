@@ -8,7 +8,6 @@ import {
   Box,
   Button,
   Card,
-  Checkbox,
   CheckboxCard,
   Flex,
   Icon,
@@ -30,6 +29,26 @@ const selects = [
   { field: "logoColor", label: "Select Logo Color", map: COLOR_CODE_MAP },
   { field: "placement", label: "Select Placement", map: PLACEMENT_MAP },
   { field: "decoMethod", label: "Select Deco Method", map: DECO_METHODS },
+  {
+    field: "productColorFamily", label: "Select Product Color Family", map:
+      [
+        "Blue",
+        "Grey",
+        "Brown",
+        "Purple",
+        "Black",
+        "Pink",
+        "Camo",
+        "Orange",
+        "Yellow",
+        "Green",
+        "Silver",
+        "Clear",
+        "Red",
+        "White",
+        "Pattern"
+      ]
+  }
 ];
 
 const ProductCard = React.memo(function ProductCard({ index, handleChange, data }) {
@@ -68,31 +87,55 @@ const ProductCard = React.memo(function ProductCard({ index, handleChange, data 
               <CheckboxCard.Indicator />
             </CheckboxCard.Control>
           </CheckboxCard.Root>
-          {/* <Button variant="outline" colorPalette="red" size="xs"><LuX />Remove</Button> */}
         </Flex>
       </Card.Header>
       <Card.Body pb={0}>
         <SimpleGrid templateColumns={{ base: "1fr", lg: "40% 1fr" }} gap={4}>
           <Stack gap={4} order={{ base: 2, lg: 1 }}>
-            {selects.map(({ field, label, map }) => (
-              <NativeSelect.Root size="sm" key={field}>
-                <NativeSelect.Field
-                  value={data[field] ?? ""}
-                  onChange={(e) =>
-                    handleChange(index, field, e.currentTarget.value)
-                  }
-                  disabled={noLogo || error}
-                >
-                  <option value="">{label}</option>
-                  {Object.keys(map).map((item) => (
-                    <option key={item} value={item}>
-                      {item}
-                    </option>
-                  ))}
-                </NativeSelect.Field>
-                <NativeSelect.Indicator />
-              </NativeSelect.Root>
-            ))}
+            {selects.map(({ field, label, map }) => {
+              if (field === "productColorFamily") {
+                return (
+                  <NativeSelect.Root size="sm" key={field}>
+                    <NativeSelect.Field
+                      value={data[field] ?? ""}
+                      onChange={(e) =>
+                        handleChange(index, field, e.currentTarget.value)
+                      }
+                      disabled={noLogo || error}
+                    >
+                      <option value="">{label}</option>
+                      {map.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator />
+                  </NativeSelect.Root>
+                )
+              } else {
+                return (
+                  <NativeSelect.Root size="sm" key={field}>
+                    <NativeSelect.Field
+                      value={data[field] ?? ""}
+                      onChange={(e) =>
+                        handleChange(index, field, e.currentTarget.value)
+                      }
+                      disabled={noLogo || error}
+                    >
+                      <option value="">{label}</option>
+                      {Object.keys(map).map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator />
+                  </NativeSelect.Root>
+                )
+              }
+            }
+            )}
 
             {data.pdpLink &&
               <Button variant="subtle" size="xs" asChild>
