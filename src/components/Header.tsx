@@ -4,6 +4,7 @@ import { Box, Tabs } from "@chakra-ui/react";
 import { usePathname, useRouter } from "next/navigation";
 import { ColorModeButton } from "./ui/color-mode";
 import { FC } from "react";
+import { LuList, LuSettings } from "react-icons/lu";
 
 export const Header: FC = () => {
   const router = useRouter();
@@ -14,7 +15,7 @@ export const Header: FC = () => {
       position="sticky"
       top={0}
       bg="bg"
-      zIndex={20000}
+      zIndex={10}
     >
       <Tabs.Root
         value={pathname === "/" ? "/product-directory" : pathname}
@@ -32,7 +33,12 @@ export const Header: FC = () => {
           </Tabs.Trigger>
 
           <Tabs.Trigger value="/products" height="5vh">
+            <LuList />
             Products
+          </Tabs.Trigger>
+          <Tabs.Trigger value="/automations" height="5vh">
+            <LuSettings />
+            Automations
           </Tabs.Trigger>
 
           <ColorModeButton

@@ -1,11 +1,12 @@
 import { toaster, Toaster } from "@/components/ui/toaster";
 import { supabase } from "@/config/Supabase";
 import { CategoryList } from "@/constants/Category";
-import { CoreWipInputs } from "@/constants/CoreWipInputs";
-import { Button, Field, Flex, Input, NativeSelect, Stack } from "@chakra-ui/react";
+import { ProductFormValues } from "@/types/ProductFormValues";
+import { Button, Field, Flex, Input, NativeSelect, Spinner, Stack } from "@chakra-ui/react";
 import Head from "next/head";
-import { FC, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { LuListPlus, LuRefreshCcw } from "react-icons/lu";
+import debounce from "lodash.debounce"
 
 const REQUIRED_FIELDS = ["name", "vendor", "url", "sku"];
 
@@ -13,15 +14,144 @@ function cleanString(str) {
   return str.replace(/[^\x20-\x7E]/g, "")
 }
 
-const CoreWip: FC = () => {
-  const [values, setValues] = useState(() => Object.fromEntries(CoreWipInputs.map((input) => [input.name, input.defaultValue ?? ""])))
-  const [selectedFamily, setSelectedFamily] = useState("Men's Apparel")
+type TextFieldName =
+  | "name"
+  | "vendor"
+  | "brand"
+  | "url"
+  | "sku"
+  | "color"
+  | "size"
+  | "price"
+  | "category"
+  | "family"
+  | "size_chart_link"
+  | "how_to_measure_link"
+  | "decoration_method"
+  | "setup_cost"
+  | "setup_cost_code"
+  | "deco_cost"
+  | "moq"
+  | "production_time"
+  | "shipping_weight";
 
-  function handleChange(name, val) {
+const TEXT_FIELDS: Array<{ name: TextFieldName; label: string; required?: boolean }> = [
+  { name: "name", label: "Name", required: true },
+  { name: "vendor", label: "Vendor", required: true },
+  { name: "brand", label: "Brand" },
+  { name: "url", label: "URL", required: true },
+  { name: "sku", label: "SKU", required: true },
+  { name: "color", label: "Color" },
+  { name: "size", label: "Size" },
+  { name: "price", label: "Price" },
+  { name: "decoration_method", label: "Decoration Method" },
+  { name: "setup_cost", label: "Setup Cost" },
+  { name: "setup_cost_code", label: "Setup Cost Code" },
+  { name: "deco_cost", label: "Deco Cost" },
+  { name: "moq", label: "MOQ" },
+  { name: "production_time", label: "Production Time" },
+  { name: "shipping_weight", label: "Shipping Weight" },
+  { name: "size_chart_link", label: "Size Chart Link" },
+  { name: "how_to_measure_link", label: "How To Measure Link" },
+];
+
+const formInitialValue = {
+  name: "",
+  vendor: "",
+  brand: "",
+  url: "",
+  sku: "",
+  color: "",
+  size: "",
+  category: "Men's Apparel",
+  family: "Polos",
+  price: 0.0,
+  size_chart_link: "",
+  how_to_measure_link: "",
+  decoration_method: "",
+  setup_cost: 0.0,
+  setup_cost_code: "",
+  deco_cost: 0.0,
+  moq: 0,
+  production_time: "",
+  shipping_weight: 0.0,
+}
+
+type Catalog = {
+  name: string,
+  id: string
+}
+
+const CoreWip: FC = () => {
+  const [values, setValues] = useState<ProductFormValues>(formInitialValue)
+  const [catalogs, setCatalogs] = useState<Catalog[]>([])
+  const [selectedCatalog, setSelectedCatalog] = useState<Catalog>({
+    name: "",
+    id: ""
+  })
+  const [loading, setLoading] = useState<boolean>(true)
+  const [buttonLoading, setButtonLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    const fetchCatalogs = async () => {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from("catalogs")
+        .select("id,name")
+
+      if (!error && data) {
+        console.log(data)
+        setCatalogs(data)
+        setSelectedCatalog(data[0] ?? null)
+      }
+
+      setLoading(false)
+    }
+
+    fetchCatalogs()
+  }, [])
+
+  const selectedCategory = useMemo(
+    () => CategoryList.find((category) => category.label === values.category) ?? CategoryList[0],
+    [values.category]
+  );
+  const familyOptions = selectedCategory?.families ?? [];
+
+  const handleChange = (name: TextFieldName, val: string) => {
+    const cleaned = cleanString(val)
+
+    // ✅ update immediately (keeps input responsive)
     setValues((prev) => ({
       ...prev,
-      [name]: cleanString(val),
+      [name]: cleaned,
     }))
+
+    // ✅ debounce side effects (API, validation, etc.)
+    debouncedSideEffect(name, cleaned)
+  }
+
+  const debouncedSideEffect = useMemo(
+    () =>
+      debounce((name: TextFieldName, val: string) => {
+        // e.g. API call, validation, etc.
+      }, 300),
+    []
+  )
+
+  if (loading || !selectedCatalog) {
+    return <Stack p={4}>
+      <Spinner />
+    </Stack>
+  }
+
+
+  function handleCategoryChange(categoryLabel: string) {
+    const nextCategory = CategoryList.find((category) => category.label === categoryLabel) ?? CategoryList[0];
+    setValues((prev) => ({
+      ...prev,
+      category: nextCategory.label,
+      family: nextCategory.families.includes(prev.family) ? prev.family : (nextCategory.families[0] ?? ""),
+    }));
   }
 
   const handleStoreProduct = async () => {
@@ -41,8 +171,9 @@ const CoreWip: FC = () => {
     const sku = values.sku.trim();
 
     try {
+      setButtonLoading(true)
       const { data: existingSku, error: skuError } = await supabase
-        .from("products")
+        .from("core_products")
         .select("sku")
         .eq("sku", sku)
         .maybeSingle();
@@ -65,33 +196,35 @@ const CoreWip: FC = () => {
       }
 
       const productPayload = {
-        url: values.url || null,
-        vendor: values.vendor || null,
-        brand: values.brand || null,
-        name: values.name.trim(),
-        sku: sku,
+        catalog_id: selectedCatalog?.id ?? null,
+        name: values.name?.trim(),
+        vendor: values.vendor?.trim() || null,
+        brand: values.brand?.trim() || null,
+        url: values.url?.trim() || null,
+        sku: sku?.trim(),
         colors: values.color
           ? values.color.split(",").map(c => c.trim()).filter(Boolean)
           : null,
-        sizes: values.size || null,
-        category: values.category || null,
-        family: values.family || null,
-        price_usd: values.price ? Number(values.price) : null,
-        size_chart_link: values.size_chart_link || null,
-        how_to_measure_guide_link: values.how_to_measure_link || null,
-        decoration_method: values.decoration_method || null,
-        moq: values.moq ? Number(values.moq) : null,
-        production_time: values.production_time || null,
-        shipping_weight: values.shipping_weight
-          ? Number(values.shipping_weight)
-          : null,
+        sizes: values.size,
+        category: values.category?.trim() || null,
+        family: values.family?.trim() || null,
+        price: values.price,
+        size_chart_link: values.size_chart_link?.trim() || null,
+        how_to_measure_link: values.how_to_measure_link?.trim() || null,
+        decoration_method: values.decoration_method?.trim() || null,
+        setup_cost: values.setup_cost,
+        setup_cost_code: values.setup_cost_code?.trim() || null,
+        deco_cost: values.deco_cost,
+        moq: values.moq,
+        production_time: values.production_time?.trim() || null,
+        shipping_weight: values.shipping_weight,
         tax_code: selectedCategory?.product_tax_code || null,
       };
 
       console.log(productPayload);
 
       const { error } = await supabase
-        .from("products")
+        .from("core_products")
         .insert([productPayload]);
 
       if (error) {
@@ -109,18 +242,16 @@ const CoreWip: FC = () => {
       });
 
       handleReset();
-
+      setButtonLoading(false)
     } catch (err) {
       console.error("Unexpected error:", err);
+    } finally {
+      setButtonLoading(false)
     }
   };
 
   const handleReset = () => {
-    setValues(
-      Object.fromEntries(
-        CoreWipInputs.map(i => [i.name, i.defaultValue ?? ""])
-      )
-    );
+    setValues(formInitialValue)
   };
 
   return (
@@ -130,81 +261,70 @@ const CoreWip: FC = () => {
       </Head>
       <Stack p={4} gap={4}>
         <Toaster />
+        <Field.Root>
+          <Field.Label>Catalog</Field.Label>
+          <NativeSelect.Root>
+            <NativeSelect.Field
+              value={selectedCatalog.id}
+              onChange={(e) => setSelectedCatalog(catalogs.find((catalog) => catalog.id === e.target.value) ?? { name: "", id: "" })}
+            >
+              {catalogs.map((catalog) => (
+                <option key={catalog.name} value={catalog.id}>
+                  {catalog.name}
+                </option>
+              ))}
+            </NativeSelect.Field>
+            <NativeSelect.Indicator />
+          </NativeSelect.Root>
+        </Field.Root>
+        <Field.Root required>
+          <Field.Label>Category</Field.Label>
+          <NativeSelect.Root>
+            <NativeSelect.Field
+              value={values.category}
+              onChange={(e) => handleCategoryChange(e.target.value)}
+            >
+              {CategoryList.map((category) => (
+                <option key={category.value} value={category.label}>
+                  {category.label}
+                </option>
+              ))}
+            </NativeSelect.Field>
+            <NativeSelect.Indicator />
+          </NativeSelect.Root>
+        </Field.Root>
+        <Field.Root>
+          <Field.Label>Family</Field.Label>
+          <NativeSelect.Root>
+            <NativeSelect.Field
+              value={values.family}
+              onChange={(e) => handleChange("family", e.target.value)}
+            >
+              {familyOptions.map((family) => (
+                <option key={family} value={family}>
+                  {family}
+                </option>
+              ))}
+            </NativeSelect.Field>
+            <NativeSelect.Indicator />
+          </NativeSelect.Root>
+        </Field.Root>
+        {TEXT_FIELDS.map((field) => (
+          <Field.Root key={field.name} required={field.required}>
+            <Field.Label>{field.label}</Field.Label>
+            <Input
+              type={field.name === "price" || field.name === "setup_cost" || field.name === "deco_cost" || field.name === "moq" || field.name === "shipping_weight" ? "number" : "text"}
+              value={values[field.name]}
+              step={field.name === "price" || field.name === "setup_cost" || field.name === "deco_cost" || field.name === "shipping_weight" ? "0.01" : ""}
+              onChange={(e) => handleChange(field.name, e.target.value)}
+            />
+          </Field.Root>
+        ))}
 
-        {
-          CoreWipInputs.map((input, i) => (
-            <Field.Root key={i}>
-              <Field.Label>{input.label}</Field.Label>
-              {input.name === "category" && (
-                <NativeSelect.Root>
-                  <NativeSelect.Field
-                    name={input.name}
-                    value={selectedFamily}
-                    onChange={(e) => {
-                      const selectedLabel = e.currentTarget.value;
-
-                      const selectedCategory = CategoryList.find(
-                        (category) => category.label === selectedLabel
-                      );
-
-                      setSelectedFamily(selectedLabel);
-
-                      setValues((prev) => ({
-                        ...prev,
-                        family: selectedCategory?.families?.[0] || null,
-                      }));
-
-                      handleChange("category", selectedLabel);
-                    }}
-                  >
-                    {input.name === "category" &&
-                      CategoryList.map((category) => (
-                        <option key={category.label} value={category.label}>
-                          {category.label}
-                        </option>
-                      ))
-                    }
-                  </NativeSelect.Field>
-                  <NativeSelect.Indicator />
-                </NativeSelect.Root>
-              )}
-              {input.name === "family" && (
-                <NativeSelect.Root
-                >
-                  <NativeSelect.Field
-                    name={input.name}
-                    value={values[input.name]}
-                    onChange={e => handleChange("family", e.currentTarget.value)}
-                  >
-                    {
-                      CategoryList.find((category) => category.label === selectedFamily)?.families.map((family) => (
-                        <option key={family} value={family}>
-                          {family}
-                        </option>
-                      ))
-                    }
-                  </NativeSelect.Field>
-                  <NativeSelect.Indicator />
-                </NativeSelect.Root>
-              )}
-              {
-                input.name !== "category" && input.name !== "family" && (
-                  <Input
-                    name={input.name}
-                    value={values[input.name]}
-                    onChange={(e) => handleChange(input.name, e.target.value)}
-                  />
-                )
-              }
-            </Field.Root>
-          ))
-        }
       </Stack>
       <Flex justifyContent="end" gap={2} position="sticky" bottom={0} bg="bg" p={2} borderTop="1px solid" borderTopColor="border">
-        <Button size="sm" variant="outline" onClick={handleReset}><LuRefreshCcw /> Reset</Button>
-        <Button size="sm" asChild>
-          <a href="corewip/list">List</a></Button>
-        <Button size="sm" onClick={handleStoreProduct}>Save <LuListPlus /></Button>
+        <Button size="xs" loading={buttonLoading} variant="outline" onClick={handleReset}><LuRefreshCcw /> Reset</Button>
+        <Button size="xs" loading={buttonLoading} onClick={handleStoreProduct}>Add Product <LuListPlus /></Button>
       </Flex>
     </>
   );
