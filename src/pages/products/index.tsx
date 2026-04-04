@@ -702,10 +702,10 @@ const List: FC<ProductsPageProps> = ({
 
                 <Field.Root>
                   <Field.Label>Category</Field.Label>
-                  <NativeSelect.Root size="sm">
+                  <NativeSelect.Root size="sm" disabled={!isEditingProduct}>
                     <NativeSelect.Field
                       value={editableProduct?.category ?? ""}
-                      disabled={!isEditingProduct}
+
                       onChange={(e) => handleCategoryChange(e.target.value)}
                     >
                       {CategoryList.map((category) => (
@@ -720,10 +720,10 @@ const List: FC<ProductsPageProps> = ({
 
                 <Field.Root>
                   <Field.Label>Family</Field.Label>
-                  <NativeSelect.Root size="sm">
+                  <NativeSelect.Root size="sm" disabled={!isEditingProduct}>
                     <NativeSelect.Field
                       value={editableProduct?.family ?? ""}
-                      disabled={!isEditingProduct}
+
                       onChange={(e) =>
                         handleProductInputChange("family", e.target.value)
                       }
