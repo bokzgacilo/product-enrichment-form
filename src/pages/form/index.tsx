@@ -75,6 +75,7 @@ const formInitialValue = {
   moq: 0,
   production_time: "",
   shipping_weight: 0.0,
+  id: ""
 }
 
 type Catalog = {
@@ -82,8 +83,12 @@ type Catalog = {
   id: string
 }
 
+type ExtendedProductFormValues = {
+  id: string;
+} & ProductFormValues;
+
 const CoreWip: FC = () => {
-  const [values, setValues] = useState<ProductFormValues>(formInitialValue)
+  const [values, setValues] = useState<ExtendedProductFormValues>(formInitialValue)
   const [catalogs, setCatalogs] = useState<Catalog[]>([])
   const [selectedCatalog, setSelectedCatalog] = useState<Catalog>({
     name: "",
