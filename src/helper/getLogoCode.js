@@ -1,18 +1,25 @@
 // USE FOR CHEVRON
+// export const LOGO_CODE_MAP = {
+//   "Boost Mobile": "BM",
+//   "GenMobile": "GM",
+//   "Chevron - The Human Energy Company": "CHVC",
+//   "Chevron Logo": "CHV",
+//   "Delo Logo + Label Vertical": "DELO-HORZ",
+//   "Oronite Logo + Label Vertical": "ORO-HORZ",
+//   "Texaco Logo + Label Vertical": "TEX-HORZ",
+//   "Delo Logo + Label Horizontal": "DELO",
+//   "Texaco Logo + Label Horizontal": "TEX",
+//   "Chevron Logo + Label Horizontal": "CHVC-HORZ",
+//   "Havoline Horizontal": "HAV-HORZ",
+//   "Havoline Vertical": "HAV",
+//   "CHV-RETIREE": "CHV-RETIREE"
+// };
 export const LOGO_CODE_MAP = {
-  "Boost Mobile": "BM",
-  "GenMobile": "GM",
-  "Chevron - The Human Energy Company": "CHVC",
-  "Chevron Logo": "CHV",
-  "Delo Logo + Label Vertical": "DELO-HORZ",
-  "Oronite Logo + Label Vertical": "ORO-HORZ",
-  "Texaco Logo + Label Vertical": "TEX-HORZ",
-  "Delo Logo + Label Horizontal": "DELO",
-  "Texaco Logo + Label Horizontal": "TEX",
-  "Chevron Logo + Label Horizontal": "CHVC-HORZ",
-  "Havoline Horizontal": "HAV-HORZ",
-  "Havoline Vertical": "HAV",
-  "CHV-RETIREE": "CHV-RETIREE"
+  "CE": "CE",
+  "CE Path": "CEP",
+  "CE Cares": "CEC",
+  "CE/Lean": "CE/LEAN",
+  "CE HVac Solutions": "CEHVS"
 };
 
 // USE FOR TAMKO
