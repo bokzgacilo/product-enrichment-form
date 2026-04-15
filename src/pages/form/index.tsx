@@ -2,7 +2,7 @@ import { toaster, Toaster } from "@/components/ui/toaster";
 import { supabase } from "@/config/Supabase";
 import { CategoryList } from "@/constants/Category";
 import { ProductFormValues } from "@/types/ProductFormValues";
-import { Button, Field, Flex, Input, NativeSelect, Spinner, Stack } from "@chakra-ui/react";
+import { Button, Field, Flex, Input, NativeSelect, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
 import Head from "next/head";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { LuListPlus, LuRefreshCcw } from "react-icons/lu";
@@ -20,6 +20,7 @@ type TextFieldName =
   | "brand"
   | "url"
   | "sku"
+  | "ref_id"
   | "color"
   | "size"
   | "price"
@@ -41,6 +42,7 @@ const TEXT_FIELDS: Array<{ name: TextFieldName; label: string; required?: boolea
   { name: "brand", label: "Brand" },
   { name: "url", label: "URL", required: true },
   { name: "sku", label: "SKU", required: true },
+  { name: "ref_id", label: "Ref ID" },
   { name: "color", label: "Color" },
   { name: "size", label: "Size" },
   { name: "price", label: "Price" },
@@ -60,6 +62,7 @@ const formInitialValue = {
   vendor: "",
   brand: "",
   url: "",
+  ref_id: "",
   sku: "",
   color: "",
   size: "",
@@ -85,6 +88,7 @@ type Catalog = {
 
 type ExtendedProductFormValues = {
   id: string;
+  ref_id: string;
 } & ProductFormValues;
 
 const CoreWip: FC = () => {
@@ -224,6 +228,7 @@ const CoreWip: FC = () => {
         production_time: values.production_time?.trim() || null,
         shipping_weight: values.shipping_weight,
         tax_code: selectedCategory?.product_tax_code || null,
+        ref_id: values.ref_id?.trim() || null,
       };
 
       console.log(productPayload);
@@ -266,22 +271,32 @@ const CoreWip: FC = () => {
       </Head>
       <Stack p={4} gap={4}>
         <Toaster />
-        <Field.Root>
-          <Field.Label>Catalog</Field.Label>
-          <NativeSelect.Root>
-            <NativeSelect.Field
-              value={selectedCatalog.id}
-              onChange={(e) => setSelectedCatalog(catalogs.find((catalog) => catalog.id === e.target.value) ?? { name: "", id: "" })}
-            >
-              {catalogs.map((catalog) => (
-                <option key={catalog.name} value={catalog.id}>
-                  {catalog.name}
-                </option>
-              ))}
-            </NativeSelect.Field>
-            <NativeSelect.Indicator />
-          </NativeSelect.Root>
-        </Field.Root>
+        <SimpleGrid gap={4} templateColumns="40% 1fr">
+          <Field.Root>
+            <Field.Label>Catalog</Field.Label>
+            <NativeSelect.Root>
+              <NativeSelect.Field
+                value={selectedCatalog.id}
+                onChange={(e) => setSelectedCatalog(catalogs.find((catalog) => catalog.id === e.target.value) ?? { name: "", id: "" })}
+              >
+                {catalogs.map((catalog) => (
+                  <option key={catalog.name} value={catalog.id}>
+                    {catalog.name}
+                  </option>
+                ))}
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+          </Field.Root>
+          <Field.Root>
+            <Field.Label>Ref ID</Field.Label>
+            <Input
+              value={values.ref_id}
+              onChange={(e) => handleChange("ref_id", e.target.value)}
+            />
+          </Field.Root>
+        </SimpleGrid>
+
         <Field.Root required>
           <Field.Label>Category</Field.Label>
           <NativeSelect.Root>
@@ -315,7 +330,9 @@ const CoreWip: FC = () => {
           </NativeSelect.Root>
         </Field.Root>
         {TEXT_FIELDS.map((field) => (
-          <Field.Root key={field.name} required={field.required}>
+          <Field.Root
+            hidden={field.name === "ref_id"}
+            key={field.name} required={field.required}>
             <Field.Label>{field.label}</Field.Label>
             <Input
               type={field.name === "price" || field.name === "setup_cost" || field.name === "deco_cost" || field.name === "moq" || field.name === "shipping_weight" ? "number" : "text"}
