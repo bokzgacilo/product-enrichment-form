@@ -185,6 +185,7 @@ const CoreWip: FC = () => {
         .from("core_products")
         .select("sku")
         .eq("sku", sku)
+        .eq("catalog_id", selectedCatalog?.id ?? null)
         .maybeSingle();
 
       if (skuError) {
